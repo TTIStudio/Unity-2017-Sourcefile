@@ -5,11 +5,11 @@ using System.Collections;
 
 public class Main : MonoBehaviour {
 
-    int time = 0;
-
-    
+    int time = 0;   
     int MHB_size_updatetime = 0;
     int MHB_size = 0;
+
+    int MaxFrameNumber = 400;
 
     // Use this for initialization
     void Start()
@@ -18,7 +18,13 @@ public class Main : MonoBehaviour {
     }
 	// Update is called once per frame
 	void Update () {
-         Task_CreatMHB();
+
+         
+        if (MaxFrameNumber > 0)
+        {
+            Task_CreatMHB();//5 MHB per time
+        }
+        MaxFrameNumber--;  
     }
 
     void Task_CreatMHB()
@@ -36,8 +42,8 @@ public class Main : MonoBehaviour {
             
             time = 0;
 
-            float MHB_size_D = (float)(0.1- MHB_size*0.001);
-            float MHB_size_Long = (float)(2 - MHB_size * 0.02);
+            float MHB_size_D = (float)(0.1- MHB_size*0.01);
+            float MHB_size_Long = (float)(2 - MHB_size * 0.2);
             Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, 0, 51, 0);
             Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, 5, 52, 5);
             Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, -5, 53, -5);
