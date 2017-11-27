@@ -45,13 +45,10 @@ public class Main : MonoBehaviour {
             
             time = 0;
 
-            float MHB_size_D = (float)(0.1- MHB_size*0.01);
-            float MHB_size_Long = (float)(2 - MHB_size * 0.2);
-            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, 0, 51, 0);
-            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, 5, 52, 5);
-            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, -5, 53, -5);
-            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, 5, 54, -5);
-            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, -5, 55, 5);
+            float MHB_size_D = (float)(0.1- MHB_size*0.001);
+            float MHB_size_Long = (float)(2 - MHB_size * 0.02);
+            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, rd.Next(1,10), 51, rd.Next(1, 10));
+
         }
     }
 
