@@ -1,14 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+
 public class Main : MonoBehaviour {
 
     int time = 0;
+
+    
+    int MHB_size_updatetime = 0;
+    int MHB_size = 0;
+
     // Use this for initialization
     void Start()
     {       
         Create_Plane(10);
-        Create_MHB_2((float)0.1, (float)2, 0, 0, 0, 0, 10, 0);
     }
 	// Update is called once per frame
 	void Update () {
@@ -21,13 +27,22 @@ public class Main : MonoBehaviour {
 
         if (time > 40)
         {
+            MHB_size_updatetime--;
+            if(MHB_size_updatetime<1)
+            {
+                MHB_size++;
+                MHB_size_updatetime = 1;
+            }
+            
             time = 0;
 
-            Create_MHB_2((float)(0.1), (float)(2), 0, 0, 0, 0, 51, 0);
-            Create_MHB_2((float)(0.1), (float)(2), 0, 0, 0, 5, 52, 5);
-            Create_MHB_2((float)(0.1), (float)(2), 0, 0, 0, -5, 53, -5);
-            Create_MHB_2((float)(0.1), (float)(2), 0, 0, 0, 5, 54, -5);
-            Create_MHB_2((float)(0.1), (float)(2), 0, 0, 0, -5, 55, 5);
+            float MHB_size_D = (float)(0.1- MHB_size*0.001);
+            float MHB_size_Long = (float)(2 - MHB_size * 0.02);
+            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, 0, 51, 0);
+            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, 5, 52, 5);
+            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, -5, 53, -5);
+            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, 5, 54, -5);
+            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, -5, 55, 5);
         }
     }
 
