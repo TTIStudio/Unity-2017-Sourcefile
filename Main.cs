@@ -47,7 +47,7 @@ public class Main : MonoBehaviour {
 
             float MHB_size_D = (float)(0.1- MHB_size*0.001);
             float MHB_size_Long = (float)(2 - MHB_size * 0.02);
-            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, rd.Next(1,10), 51, rd.Next(1, 10));
+            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, (float)0.1 * (rd.Next(1, 100)), 51, (float)0.1 *(rd.Next(1, 100)));
 
         }
     }
