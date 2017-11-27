@@ -35,13 +35,14 @@ public class Main : MonoBehaviour {
     {
         time++;
 
-        if (time > 40)
+        if (time > 10)                      // UPDATE TIME
         {
             MHB_size_updatetime--;
-            if(MHB_size_updatetime<1)
+            if(MHB_size_updatetime<1)       //  SIZE UPDATE TIME
             {
-                MHB_size++;
-                MHB_size_updatetime = 1;
+                // MHB_size++;
+                MHB_size = rd.Next(1, 100);
+                 MHB_size_updatetime = 1;
             }
             
             time = 0;
