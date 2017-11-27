@@ -15,14 +15,14 @@ public class Main : MonoBehaviour {
     {
         
         Create_Plane(10);
-        // Creat_MHBs();
+        //Creat_MHBs();
         Create_MHB_2((float)0.1, (float)2, 0, 0, 0, 0, 10, 0);
     }
 	// Update is called once per frame
 	void Update () {
 
- 
 
+       // Task_CreatMHB();
     }
 
     void Task_CreatMHB()
@@ -96,12 +96,12 @@ public class Main : MonoBehaviour {
 
         GameObject cylinder_3 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         cylinder_3.transform.localScale = new Vector3((float)0.1, 2, (float)0.1);
-        cylinder_3.transform.Rotate(-(float)54.74, (float)45, (float)0);
+        cylinder_3.transform.Rotate((float)-54.74, (float)45, (float)0);
         cylinder_3.transform.parent = MHB.transform;
 
         GameObject cylinder_4 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         cylinder_4.transform.localScale = new Vector3((float)0.1, 2, (float)0.1);
-        cylinder_4.transform.Rotate(-(float)54.74, (float)-45, (float)0);
+        cylinder_4.transform.Rotate((float)-54.74, (float)-45, (float)0);
         cylinder_4.transform.parent = MHB.transform;
 
         MHB.AddComponent<Rigidbody>();
@@ -117,22 +117,22 @@ public class Main : MonoBehaviour {
 
         GameObject cylinder_1 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         cylinder_1.transform.localScale = new Vector3((float)D, Long, (float)D);
-        cylinder_1.transform.Rotate(45, (float)54.74, 0);
+        cylinder_1.transform.Rotate((float)54.74, (float)45, 0);
         cylinder_1.transform.parent = MHB.transform;
 
         GameObject cylinder_2 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         cylinder_2.transform.localScale = new Vector3((float)D, Long, (float)D);
-        cylinder_2.transform.Rotate(45, (float)-54.74, (float)0);
+        cylinder_2.transform.Rotate((float)54.74, (float)-45, (float)0);
         cylinder_2.transform.parent = MHB.transform;
 
         GameObject cylinder_3 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         cylinder_3.transform.localScale = new Vector3((float)D, Long, (float)D);
-        cylinder_3.transform.Rotate(-45, (float)54.74, (float)0);
+        cylinder_3.transform.Rotate((float)-54.74, (float)45, (float)0);
         cylinder_3.transform.parent = MHB.transform;
 
         GameObject cylinder_4 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         cylinder_4.transform.localScale = new Vector3((float)D, Long, (float)D);
-        cylinder_4.transform.Rotate(-45, (float)-54.74, (float)0);
+        cylinder_4.transform.Rotate((float)-54.74, (float)-45, (float)0);
         cylinder_4.transform.parent = MHB.transform;
 
         MHB.AddComponent<Rigidbody>();
