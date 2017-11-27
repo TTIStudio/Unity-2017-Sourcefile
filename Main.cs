@@ -60,15 +60,6 @@ public class Main : MonoBehaviour {
         GameObject Plane_1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
         Plane_1.transform.localScale = new Vector3(size, 1, size);
     }
-
-
-    void Creat_MHBs()
-    {
-        for (int i = 1; i < 50; i++)
-        {
-            Create_MHB_2((float)(0.1 + 0.01 * i), (float)(2 + 0.2 * i), 0, 0, 0, 0, 100 - 2 * i, 0);
-        }
-    }
  
     void Create_MHB_2(float D, float Long, float R_X, float R_Y, float R_Z, float P_X, float P_Y, float P_Z)
     {
