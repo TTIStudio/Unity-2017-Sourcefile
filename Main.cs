@@ -25,9 +25,10 @@ public class Main : MonoBehaviour {
          
         if (MaxFrameNumber > 0)
         {
+            MaxFrameNumber--;  
             Task_CreatMHB();//5 MHB per time
         }
-        MaxFrameNumber--;  
+        
     }
 
     void Task_CreatMHB()
