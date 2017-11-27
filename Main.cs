@@ -49,7 +49,7 @@ public class Main : MonoBehaviour {
 
             float MHB_size_D = (float)(0.1- MHB_size*0.001);
             float MHB_size_Long = (float)(2 - MHB_size * 0.02);
-            Create_MHB_2((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, (float)0.1 * (rd.Next(1, 100)), 51, (float)0.1 *(rd.Next(1, 100)));
+            Create_MHB((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, (float)0.1 * (rd.Next(1, 100)), 51, (float)0.1 *(rd.Next(1, 100)));
 
         }
     }
@@ -61,7 +61,7 @@ public class Main : MonoBehaviour {
         Plane_1.transform.localScale = new Vector3(size, 1, size);
     }
  
-    void Create_MHB_2(float D, float Long, float R_X, float R_Y, float R_Z, float P_X, float P_Y, float P_Z)
+    void Create_MHB(float D, float Long, float R_X, float R_Y, float R_Z, float P_X, float P_Y, float P_Z)
     {
         GameObject MHB = new GameObject();
         MHB.name = "MHB";
