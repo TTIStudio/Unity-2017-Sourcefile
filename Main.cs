@@ -9,12 +9,15 @@ public class Main : MonoBehaviour {
     int MHB_size_updatetime = 0;
     int MHB_size = 0;
 
-    int MaxFrameNumber = 400;
+    int MaxFrameNumber = 4000;
 
+    System.Random rd = new System.Random();
+    
     // Use this for initialization
     void Start()
     {       
         Create_Plane(10);
+       
     }
 	// Update is called once per frame
 	void Update () {
