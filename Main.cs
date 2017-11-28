@@ -23,12 +23,12 @@ public class Main : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        frame_count++;
-        if (frame_count > 1)
-        {
-            PUT_MHB_Task();
-            frame_count = 0;
-        }
+        //frame_count++;
+        //if (frame_count > 1)
+        //{
+        //    PUT_MHB_Task();
+        //    frame_count = 0;
+        //}
         
     }
 
@@ -79,7 +79,7 @@ public class Main : MonoBehaviour {
         cylinder_4.transform.Rotate((float)-54.74, (float)-45, (float)0);
         cylinder_4.transform.parent = MHB.transform;
 
-        //MHB.AddComponent<Rigidbody>();
+        MHB.AddComponent<Rigidbody>();
 
         MHB.transform.position = new Vector3(P_X, P_Y, P_Z);
         MHB.transform.Rotate(R_X,R_Y,R_Z);        
@@ -134,7 +134,9 @@ public class Main : MonoBehaviour {
                 }
                 MHB_Reading = false;//end of this MHB
                 MHB_data_value_counter = 0;
-                //Create_MHB((float)1, (float)20, (float)0, (float)0, (float)0, (float)MHB_XYZ[0], (float)MHB_XYZ[2], (float)MHB_XYZ[1]);
+
+
+                Create_MHB((float)1, (float)20, (float)0, (float)0, (float)0, (float)MHB_XYZ[0], (float)MHB_XYZ[2], (float)MHB_XYZ[1]);
                 MHB_Position[MHB_number,0] = MHB_XYZ[0];
                 MHB_Position[MHB_number,1] = MHB_XYZ[1];
                 MHB_Position[MHB_number,2] = MHB_XYZ[2];
