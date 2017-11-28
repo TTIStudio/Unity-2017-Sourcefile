@@ -17,14 +17,14 @@ public class Main : MonoBehaviour {
     {
         LoadData();
         Create_Plane(300);
-        MainCamera_Init(10,0,0,0,150, (float)-400);
+        MainCamera_Init(20,-50,0,600,750, (float)-700);
 
     }
 	// Update is called once per frame
 	void Update () {
 
         frame_count++;
-        if (frame_count > 10)
+        if (frame_count > 1)
         {
             PUT_MHB_Task();
             frame_count = 0;
