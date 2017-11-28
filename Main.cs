@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-using System.Text;
-// Open File with Windows UI  -- Method 1
-// for OpenFileName Class
-using System;
-using System.Runtime.InteropServices;
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-// Open File with Windows UI  -- Method 1   -   END
+
+// Open File with Windows UI  -- Method 2
+
+using System.IO;
+
+// Open File with Windows UI  -- Method 2   -   END
 public class Main : MonoBehaviour {
 
     int time = 0;   
@@ -15,10 +14,12 @@ public class Main : MonoBehaviour {
     int MHB_size = 0;
     int MaxFrameNumber = 4000;
     System.Random rd = new System.Random();
+  
 
     // Use this for initialization
     void Start()
-    {       
+    {
+        LoadData();
         Create_Plane(10);
         MainCamera_Init(10,0,0,0,10, (float)-30);
     }
@@ -100,46 +101,14 @@ public class Main : MonoBehaviour {
         MHB.transform.Rotate(R_X,R_Y,R_Z);        
     }
 
-
-
-    // from : https://www.cnblogs.com/qingjoin/p/3630505.html
     void OnGUI()
     {
         //Create a Button with Click Event  
-        if (GUI.Button(new Rect(0, 10, 100, 30), "Open File"))
+        if (GUI.Button(new Rect(0, 10, 100, 30), "Hello MHB"))
         {
             //System.Console.WriteLine("hello world");
             print("Hello MHB!");
-            // Debug.Log("up.up");
-
-            OpenFileName ofn = new OpenFileName();
-
-            ofn.structSize = Marshal.SizeOf(ofn);
-
-            ofn.filter = "All Files\0*.*\0\0";
-
-            ofn.file = new string(new char[256]);
-
-            ofn.maxFile = ofn.file.Length;
-
-            ofn.fileTitle = new string(new char[64]);
-
-            ofn.maxFileTitle = ofn.fileTitle.Length;
-
-            ofn.initialDir = UnityEngine.Application.dataPath;//默认路径
-
-            ofn.title = "Open Project";
-
-            ofn.defExt = "JPG";//显示文件的类型
-                               //注意 一下项目不一定要全选 但是0x00000008项不要缺少
-            ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;//OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR
-
-            if (DllTest.GetOpenFileName(ofn))
-            {
-
-                Debug.Log("Selected file with full path: {0}" + ofn.file);
-
-            }
+            // Debug.Log("up.up");      
 
         }
 
@@ -147,49 +116,22 @@ public class Main : MonoBehaviour {
     }
 
 
-
-}
-
-
-
-
-// Open File with Windows UI  -- Method 1
-// Ref: http://www.cnblogs.com/U-tansuo/archive/2012/07/10/GetOpenFileName.html
-public class OpenFileName
-{
-    public int structSize = 0;
-    public IntPtr dlgOwner = IntPtr.Zero;
-    public IntPtr instance = IntPtr.Zero;
-    public String filter = null;
-    public String customFilter = null;
-    public int maxCustFilter = 0;
-    public int filterIndex = 0;
-    public String file = null;
-    public int maxFile = 0;
-    public String fileTitle = null;
-    public int maxFileTitle = 0;
-    public String initialDir = null;
-    public String title = null;
-    public int flags = 0;
-    public short fileOffset = 0;
-    public short fileExtension = 0;
-    public String defExt = null;
-    public IntPtr custData = IntPtr.Zero;
-    public IntPtr hook = IntPtr.Zero;
-    public String templateName = null;
-    public IntPtr reservedPtr = IntPtr.Zero;
-    public int reservedInt = 0;
-    public int flagsEx = 0;
-}
-
-public class DllTest
-{
-    [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
-    public static extern bool GetOpenFileName([In, Out] OpenFileName ofn);
-    public static bool GetOpenFileName1([In, Out] OpenFileName ofn)
-
+    void LoadData()
     {
-        return GetOpenFileName(ofn);
+        FileStream aFile = new FileStream(@"C:\Users\kongq\Desktop\Unity Project\Start 201711\New Unity Project 2\hello.txt", FileMode.OpenOrCreate);
+
+        StreamWriter sw = new StreamWriter(aFile);
+
+        sw.WriteLine("为今后我们之间的进一步合作，");
+
+        sw.WriteLine("为我们之间日益增进的友谊，");
+
+        sw.Write("为朋友们的健康幸福，");
+
+        sw.Write("干杯！朋友！");
+
+        sw.Close();
+
     }
 }
-// Open File with Windows UI  -- Method 1   -   END
+
