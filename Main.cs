@@ -2,7 +2,12 @@
 using System.Collections;
 
 
-
+// Open File with Windows UI  -- Method 1
+// for OpenFileName Class
+using System;
+using System.Runtime.InteropServices;
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+// Open File with Windows UI  -- Method 1   -   END
 public class Main : MonoBehaviour {
 
     int time = 0;   
@@ -16,8 +21,6 @@ public class Main : MonoBehaviour {
     {       
         Create_Plane(10);
         MainCamera_Init(10,0,0,0,10, (float)-30);
-
-
     }
 	// Update is called once per frame
 	void Update () {
@@ -102,14 +105,96 @@ public class Main : MonoBehaviour {
     // from : https://www.cnblogs.com/qingjoin/p/3630505.html
     void OnGUI()
     {
-        //开始按钮  
-        if (GUI.Button(new Rect(0, 10, 100, 30), "qingjoin "))
+        //Create a Button with Click Event  
+        if (GUI.Button(new Rect(0, 10, 100, 30), "Open File"))
         {
             //System.Console.WriteLine("hello world");
-            print("hello qingjoin !");
+            print("Hello MHB!");
             // Debug.Log("up.up");
+
+
+
+            // Open File with Windows UI  -- Method 1
+
+            OpenFileName ofn = new OpenFileName();
+
+
+            //ArgumentException: Type OpenFileName cannot be marshaled as an unmanaged structure.
+            //Parameter name: t
+            ofn.structSize = Marshal.SizeOf(ofn);
+            
+
+            ofn.filter = "All Files\0*.*\0\0";
+
+            ofn.file = new string(new char[256]);
+
+            ofn.maxFile = ofn.file.Length;
+
+            ofn.fileTitle = new string(new char[64]);
+
+            ofn.maxFileTitle = ofn.fileTitle.Length;
+            string path = Application.streamingAssetsPath;
+            path = path.Replace('/', '\\');
+            //默认路径  
+            ofn.initialDir = path;
+            //ofn.initialDir = "D:\\MyProject\\UnityOpenCV\\Assets\\StreamingAssets";  
+            ofn.title = "Open Project";
+
+            ofn.defExt = "JPG";//显示文件的类型  
+            //注意 一下项目不一定要全选 但是0x00000008项不要缺少  
+            ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;//OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR  
+
+            if (WindowDll.GetOpenFileName(ofn))
+            {
+                Debug.Log("Selected file with full path: {0}" + ofn.file);
+            }
+            // Open File with Windows UI  -- Method 1   -   END
+
         }
 
     }
 
 }
+
+
+
+
+// Open File with Windows UI  -- Method 1
+// Ref: http://www.cnblogs.com/U-tansuo/archive/2012/07/10/GetOpenFileName.html
+public class OpenFileName
+{
+    public int structSize = 0;
+    public IntPtr dlgOwner = IntPtr.Zero;
+    public IntPtr instance = IntPtr.Zero;
+    public String filter = null;
+    public String customFilter = null;
+    public int maxCustFilter = 0;
+    public int filterIndex = 0;
+    public String file = null;
+    public int maxFile = 0;
+    public String fileTitle = null;
+    public int maxFileTitle = 0;
+    public String initialDir = null;
+    public String title = null;
+    public int flags = 0;
+    public short fileOffset = 0;
+    public short fileExtension = 0;
+    public String defExt = null;
+    public IntPtr custData = IntPtr.Zero;
+    public IntPtr hook = IntPtr.Zero;
+    public String templateName = null;
+    public IntPtr reservedPtr = IntPtr.Zero;
+    public int reservedInt = 0;
+    public int flagsEx = 0;
+}
+
+public class WindowDll
+{
+    [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
+    public static extern bool GetOpenFileName([In, Out] OpenFileName ofn);
+    public static bool GetOpenFileName1([In, Out] OpenFileName ofn)
+    {
+        return GetOpenFileName(ofn);
+    }
+}
+// Open File with Windows UI  -- Method 1   -   END
