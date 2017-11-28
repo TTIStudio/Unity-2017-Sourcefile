@@ -120,9 +120,21 @@ public class Main : MonoBehaviour {
     {
         FileStream aFile = new FileStream(@"C:\Users\kongq\Desktop\Unity Project\Start 201711\New Unity Project 2\\putput\1.txt", FileMode.Open);
 
-        StreamReader Reader = new StreamReader(aFile);
+        //try
+        //{
+            BinaryReader Reader = new BinaryReader(aFile);
+        //}
+        //catch (IOException e)
+        //{
+        //    print(e.Message + "\n Cannot open file.");
+        //    return;
+        //}
 
- 
+        for (int i = 0; i < 5; i++)
+        {
+            char a =Reader.ReadChar();
+            print(a);
+        }
     }
 }
 
