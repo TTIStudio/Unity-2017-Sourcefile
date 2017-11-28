@@ -1,73 +1,47 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
-// Open File with Windows UI  -- Method 2
 using System;
 using System.IO;
 
-
-using System.Threading;
-
 // Open File with Windows UI  -- Method 2   -   END
 public class Main : MonoBehaviour {
-
-    int time = 0;   
-    int MHB_size_updatetime = 0;
-    int MHB_size = 0;
-    int MaxFrameNumber = 4000;
-    System.Random rd = new System.Random();
-    Thread thread;
-
     int MHB_Position_Sclae_for_LOADFILE = 100;
+    float[,] MHB_Position = new float[1000,3];
+    int MHB_number = 0;
+    int MHB_number_count = 0;
+
+    int frame_count=0;
     // Use this for initialization
     void Start()
     {
-        //LoadData();
+        LoadData();
         Create_Plane(300);
-        MainCamera_Init(10,0,0,0,10, (float)-30);
+        MainCamera_Init(10,0,0,0,150, (float)-400);
 
-        thread = new Thread(LoadData);
-        thread.IsBackground = true;
-        thread.Start();
     }
 	// Update is called once per frame
 	void Update () {
 
-
-        //if (MaxFrameNumber > 0)
-        //{
-        //    MaxFrameNumber--;
-        //    Task_CreatMHB();//5 MHB per time
-        //}
-
+        frame_count++;
+        if (frame_count > 10)
+        {
+            PUT_MHB_Task();
+            frame_count = 0;
+        }
         
-
     }
 
-    void Task_CreatMHB()
+    void PUT_MHB_Task()
     {
-        time++;
-
-        if (time > 10)                      // UPDATE TIME
+        if (MHB_number_count < MHB_number)
         {
-            MHB_size_updatetime--;
-            if(MHB_size_updatetime<1)       //  SIZE UPDATE TIME
-            {
-                // MHB_size++;
-                MHB_size = rd.Next(1, 100);
-                 MHB_size_updatetime = 1;
-            }
-            
-            time = 0;
+            Create_MHB((float)1, (float)20, (float)0, (float)0, (float)0, (float)MHB_Position[MHB_number_count,0], (float)MHB_Position[MHB_number_count,2], (float)MHB_Position[MHB_number_count,1]);
 
-            float MHB_size_D = (float)(0.1- MHB_size*0.001);
-            float MHB_size_Long = (float)(2 - MHB_size * 0.02);
-            Create_MHB((float)(MHB_size_D), (float)(MHB_size_Long), 0, 0, 0, (float)0.1 * (rd.Next(1, 100)), 51, (float)0.1 *(rd.Next(1, 100)));
-
+            MHB_number_count++;
         }
     }
-
+   
     void Create_Plane(int size)
     {
         GameObject Plane_1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
@@ -105,7 +79,7 @@ public class Main : MonoBehaviour {
         cylinder_4.transform.Rotate((float)-54.74, (float)-45, (float)0);
         cylinder_4.transform.parent = MHB.transform;
 
-        MHB.AddComponent<Rigidbody>();
+        //MHB.AddComponent<Rigidbody>();
 
         MHB.transform.position = new Vector3(P_X, P_Y, P_Z);
         MHB.transform.Rotate(R_X,R_Y,R_Z);        
@@ -119,26 +93,14 @@ public class Main : MonoBehaviour {
             //System.Console.WriteLine("hello world");
             print("Hello MHB!");
             // Debug.Log("up.up");      
-
         }
-
-
+        
     }
-
-
+    
     void LoadData()
     {
-        FileStream aFile = new FileStream(@"C:\Users\kongq\Desktop\Unity Project\Start 201711\New Unity Project 2\\putput\1.txt", FileMode.Open);
-
-        //try
-        //{
+        FileStream aFile = new FileStream(@"C:\Users\kongq\Desktop\Unity Project\Start 201711\New Unity Project 2\\putput\all.txt", FileMode.Open);
         BinaryReader Reader = new BinaryReader(aFile);
-        //}
-        //catch (IOException e)
-        //{
-        //    print(e.Message + "\n Cannot open file.");
-        //    return;
-        //}
 
         long filelength= aFile.Length;
         bool MHB_Reading = false;        
@@ -150,7 +112,6 @@ public class Main : MonoBehaviour {
 
         while ((filelength--)>0)
         {   char a= Reader.ReadChar();
-            //print(a);
             if (a == '{')// start a new MHB
             {   //intilize all flags
                 MHB_Reading = true;
@@ -160,14 +121,12 @@ public class Main : MonoBehaviour {
                 MHB_XYZ[0] = 0;
                 MHB_XYZ[1] = 0;
                 MHB_XYZ[2] = 0;
+
+                
             }
             else if (a == '}')
             {
-                
-                //print(MHB_XYZ[MHB_index].ToString());
                 MHB_XYZ[MHB_index] = MHB_XYZ[MHB_index] / (float)Math.Pow(10, MHB_data_value_counter);
-                //print(MHB_XYZ[MHB_index].ToString());// wrong
-                //print(MHB_data_value_counter.ToString());// work well
                 if (MHB_Sign_Nagivate)
                 {
                     MHB_XYZ[MHB_index] = -MHB_XYZ[MHB_index];
@@ -175,30 +134,25 @@ public class Main : MonoBehaviour {
                 }
                 MHB_Reading = false;//end of this MHB
                 MHB_data_value_counter = 0;
-
-                //print(MHB_XYZ[0].ToString()+','+ MHB_XYZ[1].ToString() + ','+ MHB_XYZ[2].ToString() + ',');
-                //print("%f,%f,%f", MHB_XYZ[0], MHB_XYZ[1], MHB_XYZ[2]);
-                Create_MHB((float)1, (float)20, (float)0, (float)0, (float)0, (float)MHB_XYZ[0], (float)MHB_XYZ[2], (float)MHB_XYZ[1]);
+                //Create_MHB((float)1, (float)20, (float)0, (float)0, (float)0, (float)MHB_XYZ[0], (float)MHB_XYZ[2], (float)MHB_XYZ[1]);
+                MHB_Position[MHB_number,0] = MHB_XYZ[0];
+                MHB_Position[MHB_number,1] = MHB_XYZ[1];
+                MHB_Position[MHB_number,2] = MHB_XYZ[2];
+                MHB_number++;
             }
             else if (a == ',')
             {
-                //print(MHB_XYZ[MHB_index].ToString());
                 MHB_XYZ[MHB_index] = MHB_XYZ[MHB_index] / (float)Math.Pow(10, MHB_data_value_counter);
-                //print(MHB_XYZ[MHB_index].ToString());// wrong
-                //print(MHB_data_value_counter.ToString());// work well
                 if (MHB_Sign_Nagivate)
                 {
                     MHB_XYZ[MHB_index] = -MHB_XYZ[MHB_index];
                     MHB_Sign_Nagivate = false;
                 }
-
-
                 MHB_index++;
                 MHB_data_value_counter = 0;
             }
             else if (a == ' ' | a == 10 | a == 13) //10: LF, 13:CR
-            {
-                //Do NOTHING
+            {//Do NOTHING
             }
             else if (a == '-')
             {
@@ -214,18 +168,12 @@ public class Main : MonoBehaviour {
                 if (MHB_Reading == true)//deal this MHB
                 {   MHB_data_value_counter++;
                     MHB_XYZ[MHB_index] = MHB_XYZ[MHB_index] * 10 + (a - '0');
-                    //print(a+" - "+MHB_index.ToString() + " - " + MHB_XYZ[MHB_index].ToString()); //work well
                 }
-                //else if (MHB_Reading == false)//Creat this MHB
-                //{
-                //    }
             }
             else
             {
                 print("AMAZON! What is this? --" + a);
             }
-            
-
         }
 
         Reader.Close();
