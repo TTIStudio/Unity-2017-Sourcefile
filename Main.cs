@@ -118,20 +118,11 @@ public class Main : MonoBehaviour {
 
     void LoadData()
     {
-        FileStream aFile = new FileStream(@"C:\Users\kongq\Desktop\Unity Project\Start 201711\New Unity Project 2\hello.txt", FileMode.OpenOrCreate);
+        FileStream aFile = new FileStream(@"C:\Users\kongq\Desktop\Unity Project\Start 201711\New Unity Project 2\\putput\1.txt", FileMode.Open);
 
-        StreamWriter sw = new StreamWriter(aFile);
+        StreamReader Reader = new StreamReader(aFile);
 
-        sw.WriteLine("为今后我们之间的进一步合作，");
-
-        sw.WriteLine("为我们之间日益增进的友谊，");
-
-        sw.Write("为朋友们的健康幸福，");
-
-        sw.Write("干杯！朋友！");
-
-        sw.Close();
-
+ 
     }
 }
 
