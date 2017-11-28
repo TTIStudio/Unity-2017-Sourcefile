@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
+using System.Text;
 // Open File with Windows UI  -- Method 1
 // for OpenFileName Class
 using System;
@@ -15,7 +15,7 @@ public class Main : MonoBehaviour {
     int MHB_size = 0;
     int MaxFrameNumber = 4000;
     System.Random rd = new System.Random();
-    
+
     // Use this for initialization
     void Start()
     {       
@@ -112,17 +112,9 @@ public class Main : MonoBehaviour {
             print("Hello MHB!");
             // Debug.Log("up.up");
 
-
-
-            // Open File with Windows UI  -- Method 1
-
             OpenFileName ofn = new OpenFileName();
 
-
-            //ArgumentException: Type OpenFileName cannot be marshaled as an unmanaged structure.
-            //Parameter name: t
-            ofn.structSize = 23;// Marshal.SizeOf(ofn);
-            
+            ofn.structSize = Marshal.SizeOf(ofn);
 
             ofn.filter = "All Files\0*.*\0\0";
 
@@ -133,26 +125,28 @@ public class Main : MonoBehaviour {
             ofn.fileTitle = new string(new char[64]);
 
             ofn.maxFileTitle = ofn.fileTitle.Length;
-            string path = Application.streamingAssetsPath;
-            path = path.Replace('/', '\\');
-            //默认路径  
-            ofn.initialDir = path;
-            //ofn.initialDir = "D:\\MyProject\\UnityOpenCV\\Assets\\StreamingAssets";  
+
+            ofn.initialDir = UnityEngine.Application.dataPath;//默认路径
+
             ofn.title = "Open Project";
 
-            ofn.defExt = "JPG";//显示文件的类型  
-            //注意 一下项目不一定要全选 但是0x00000008项不要缺少  
-            ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;//OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR  
-            //MarshalDirectiveException: Type OpenFileName which is passed to unmanaged code must have a StructLayout attribute.
-            if (WindowDll.GetOpenFileName(ofn))  //
+            ofn.defExt = "JPG";//显示文件的类型
+                               //注意 一下项目不一定要全选 但是0x00000008项不要缺少
+            ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;//OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR
+
+            if (DllTest.GetOpenFileName(ofn))
             {
+
                 Debug.Log("Selected file with full path: {0}" + ofn.file);
+
             }
-            // Open File with Windows UI  -- Method 1   -   END
 
         }
 
+
     }
+
+
 
 }
 
@@ -188,11 +182,12 @@ public class OpenFileName
     public int flagsEx = 0;
 }
 
-public class WindowDll
+public class DllTest
 {
     [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
     public static extern bool GetOpenFileName([In, Out] OpenFileName ofn);
     public static bool GetOpenFileName1([In, Out] OpenFileName ofn)
+
     {
         return GetOpenFileName(ofn);
     }
