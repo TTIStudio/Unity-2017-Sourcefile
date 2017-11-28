@@ -8,16 +8,16 @@ public class Main : MonoBehaviour {
     int time = 0;   
     int MHB_size_updatetime = 0;
     int MHB_size = 0;
-
     int MaxFrameNumber = 4000;
-
     System.Random rd = new System.Random();
     
     // Use this for initialization
     void Start()
     {       
         Create_Plane(10);
-       
+        MainCamera_Start(10,0,0,0,10, (float)-30);
+
+
     }
 	// Update is called once per frame
 	void Update () {
@@ -54,11 +54,16 @@ public class Main : MonoBehaviour {
         }
     }
 
-
     void Create_Plane(int size)
     {
         GameObject Plane_1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        Plane_1.transform.localScale = new Vector3(size, 1, size);
+        Plane_1.transform.localScale = new Vector3(size, 5, size);
+    }
+
+    void MainCamera_Start(float R_X, float R_Y, float R_Z, float P_X, float P_Y, float P_Z)
+    {
+        Camera.main.transform.position = new Vector3((float)P_X, (float)P_Y, (float)P_Z);
+        Camera.main.transform.Rotate((float)R_X, (float)R_Y, (float)R_Z);
     }
  
     void Create_MHB(float D, float Long, float R_X, float R_Y, float R_Z, float P_X, float P_Y, float P_Z)
@@ -91,4 +96,9 @@ public class Main : MonoBehaviour {
         MHB.transform.position = new Vector3(P_X, P_Y, P_Z);
         MHB.transform.Rotate(R_X,R_Y,R_Z);        
     }
+
+
+
+
+
 }
