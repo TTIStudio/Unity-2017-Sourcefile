@@ -15,7 +15,7 @@ public class Main : MonoBehaviour {
     void Start()
     {       
         Create_Plane(10);
-        MainCamera_Start(10,0,0,0,10, (float)-30);
+        MainCamera_Init(10,0,0,0,10, (float)-30);
 
 
     }
@@ -60,7 +60,7 @@ public class Main : MonoBehaviour {
         Plane_1.transform.localScale = new Vector3(size, 5, size);
     }
 
-    void MainCamera_Start(float R_X, float R_Y, float R_Z, float P_X, float P_Y, float P_Z)
+    void MainCamera_Init(float R_X, float R_Y, float R_Z, float P_X, float P_Y, float P_Z)
     {
         Camera.main.transform.position = new Vector3((float)P_X, (float)P_Y, (float)P_Z);
         Camera.main.transform.Rotate((float)R_X, (float)R_Y, (float)R_Z);
@@ -99,6 +99,17 @@ public class Main : MonoBehaviour {
 
 
 
+    // from : https://www.cnblogs.com/qingjoin/p/3630505.html
+    void OnGUI()
+    {
+        //开始按钮  
+        if (GUI.Button(new Rect(0, 10, 100, 30), "qingjoin "))
+        {
+            //System.Console.WriteLine("hello world");
+            print("hello qingjoin !");
+            // Debug.Log("up.up");
+        }
 
+    }
 
 }
