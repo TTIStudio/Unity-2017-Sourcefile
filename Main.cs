@@ -6,6 +6,9 @@ using System.Collections;
 using System;
 using System.IO;
 
+
+using System.Threading;
+
 // Open File with Windows UI  -- Method 2   -   END
 public class Main : MonoBehaviour {
 
@@ -14,15 +17,19 @@ public class Main : MonoBehaviour {
     int MHB_size = 0;
     int MaxFrameNumber = 4000;
     System.Random rd = new System.Random();
-
+    Thread thread;
 
     int MHB_Position_Sclae_for_LOADFILE = 100;
     // Use this for initialization
     void Start()
     {
-        LoadData();
+        //LoadData();
         Create_Plane(300);
         MainCamera_Init(10,0,0,0,10, (float)-30);
+
+        thread = new Thread(LoadData);
+        thread.IsBackground = true;
+        thread.Start();
     }
 	// Update is called once per frame
 	void Update () {
@@ -34,7 +41,7 @@ public class Main : MonoBehaviour {
         //    Task_CreatMHB();//5 MHB per time
         //}
 
-
+        
 
     }
 
