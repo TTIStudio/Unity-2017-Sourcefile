@@ -121,7 +121,7 @@ public class Main : MonoBehaviour {
 
             //ArgumentException: Type OpenFileName cannot be marshaled as an unmanaged structure.
             //Parameter name: t
-            ofn.structSize = Marshal.SizeOf(ofn);
+            ofn.structSize = 23;// Marshal.SizeOf(ofn);
             
 
             ofn.filter = "All Files\0*.*\0\0";
@@ -143,8 +143,8 @@ public class Main : MonoBehaviour {
             ofn.defExt = "JPG";//显示文件的类型  
             //注意 一下项目不一定要全选 但是0x00000008项不要缺少  
             ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;//OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR  
-
-            if (WindowDll.GetOpenFileName(ofn))
+            //MarshalDirectiveException: Type OpenFileName which is passed to unmanaged code must have a StructLayout attribute.
+            if (WindowDll.GetOpenFileName(ofn))  //
             {
                 Debug.Log("Selected file with full path: {0}" + ofn.file);
             }
