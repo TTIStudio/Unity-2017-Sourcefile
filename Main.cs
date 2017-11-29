@@ -6,9 +6,9 @@ using System.IO;
 
 // Open File with Windows UI  -- Method 2   -   END
 public class Main : MonoBehaviour {
-    int MHB_Position_Sclae_for_LOADFILE = 100;
+    int MHB_Sclae_for_LOADFILE = 100;
     float[,] MHB_Position = new float[1000,3];      // support MAX 1000 MHB
-    float[,] MHB_Config_table = new float[100, 2];  // Support 100 kinds of MHB - - table : diameter, length
+    float[,] MHB_Config_table = new float[100, 3];  // Support 100 kinds of MHB - - table : diameter, length
     int Config_Number = 0;
     int MHB_number = 0;
     int MHB_number_count = 0;
@@ -19,14 +19,15 @@ public class Main : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-
+        print("Loading Config File");
         LoadMHB_ConfigF(MappingFilePosition + "Config.txt");
-        Create_Plane(300);
+        Create_Plane(300,-10);
         MainCamera_Init(20,-50,0,600,750, (float)-700);
-        LOAD_MHB_ALL();
+
+        //LOAD_MHB_ALL();
     }
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
 
         //frame_count++;
         //if (frame_count > 1)
@@ -35,15 +36,14 @@ public class Main : MonoBehaviour {
         //    frame_count = 0;
         //}
 
-
-
     }
 
     void LOAD_MHB_ALL() //Load MHBs in one Time According to Config File
     {
-        for(int i=1;i< Config_Number;i++)
+        print("Loading Config File");
+        for (int i=1;i< Config_Number;i++)
         {
-            LoadMHBs(MappingFilePosition+i.ToString()+".txt", MHB_Config_table[i,0], MHB_Config_table[i, 1]);
+            LoadMHBs(MappingFilePosition+i.ToString()+".txt", MHB_Config_table[i,0], MHB_Config_table[i, 1], MHB_Sclae_for_LOADFILE);
         }
     }
 
@@ -58,10 +58,11 @@ public class Main : MonoBehaviour {
         }
     }
    
-    void Create_Plane(int size)
+    void Create_Plane(int size,float Hight)
     {
         GameObject Plane_1 = GameObject.CreatePrimitive(PrimitiveType.Plane);
         Plane_1.transform.localScale = new Vector3(size, 5, size);
+        Plane_1.transform.position = new Vector3(0,(float)Hight,0);
     }
 
     void MainCamera_Init(float R_X, float R_Y, float R_Z, float P_X, float P_Y, float P_Z)
@@ -114,7 +115,7 @@ public class Main : MonoBehaviour {
     }
     
     //Load MHBs in one time according to a Mapping File
-    void LoadMHBs(System.String FilePosition,float D,float Long)
+    void LoadMHBs(System.String FilePosition,float D,float Long,int Scale)
     {
         FileStream aFile = new FileStream(FilePosition, FileMode.Open);
         BinaryReader Reader = new BinaryReader(aFile);
@@ -160,7 +161,7 @@ public class Main : MonoBehaviour {
                 MHB_data_value_counter = 0;
 
 
-                Create_MHB((float)D, (float)Long, (float)0, (float)0, (float)0, (float)MHB_XYZ[0], (float)MHB_XYZ[2], (float)MHB_XYZ[1]);
+                Create_MHB((float)D/ Scale, (float)Long/ Scale, (float)0, (float)0, (float)0, (float)MHB_XYZ[0]/ Scale, (float)MHB_XYZ[2]/ Scale, (float)MHB_XYZ[1]/ Scale);
                 //MHB_Position[MHB_number,0] = MHB_XYZ[0];
                 //MHB_Position[MHB_number,1] = MHB_XYZ[1];
                 //MHB_Position[MHB_number,2] = MHB_XYZ[2];
@@ -250,17 +251,24 @@ public class Main : MonoBehaviour {
                     if (FLAG_IS_FLOATING)
                     {
                         MHB_Config_table[Count_filename, Count_conf - 1] = MHB_Config_table[Count_filename, Count_conf - 1] / (float)(Math.Pow(10, Count_comma));
+                        Count_comma = 0;
+                        FLAG_IS_FLOATING = false;
                     }
                     FLAG_IN_Config = false;
-                    Config_Number++;
+                    if(!FLAG_IN_Comment) Config_Number++;
+                    //Count_comma = 0;
                     break;//end of this configure
 
                 case ',':
                     if (FLAG_IS_FLOATING)
                     {
                         MHB_Config_table[Count_filename, Count_conf - 1] = MHB_Config_table[Count_filename, Count_conf - 1] / (float)(Math.Pow(10, Count_comma));
+                        Count_comma = 0;
+                        FLAG_IS_FLOATING = false;
                     }
-                    Count_conf ++; break;
+                    Count_conf ++;
+                    
+                    break;
                 case ':': Count_conf=1; break;
                 case '0':
                 case '1':
@@ -289,12 +297,25 @@ public class Main : MonoBehaviour {
                     case 2:
                         MHB_Config_table[Count_filename, Count_conf - 1] = MHB_Config_table[Count_filename, Count_conf - 1] * 10 + a - '0';
                         break;
+                    case 3:
+                        MHB_Config_table[Count_filename, Count_conf-1] = a - '0';
+                        break;
                     default:print("ERROR: something went wrong!"); break;
                 }
 
             }
 
         }
+
+        //report
+        print("find "+Config_Number.ToString()+ " different kinds MHBs");
+
+
+        for (int i = 0; i < Config_Number+1; i++)
+        {
+            print(MHB_Config_table[i, 0].ToString() + ',' + MHB_Config_table[i, 1].ToString() + ',' + MHB_Config_table[i, 2].ToString());
+        }
+        Reader.Close();
     }
 }
 
