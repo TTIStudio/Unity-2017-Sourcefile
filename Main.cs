@@ -9,24 +9,21 @@ public class Main : MonoBehaviour {
     int MHB_Position_Sclae_for_LOADFILE = 100;
     float[,] MHB_Position = new float[1000,3];      // support MAX 1000 MHB
     float[,] MHB_Config_table = new float[100, 2];  // Support 100 kinds of MHB - - table : diameter, length
+    int Config_Number = 0;
     int MHB_number = 0;
     int MHB_number_count = 0;
 
     int frame_count=0;
+
+    System.String MappingFilePosition = @"C:\Users\kongq\Desktop\Unity Project\Start 201711\Unity-2017-Sourcefile\putput\";
     // Use this for initialization
     void Start()
     {
 
-        LoadMHB_ConfigF(@"C:\Users\kongq\Desktop\Unity Project\Start 201711\Unity-2017-Sourcefile\putput\"+"Config.txt");
+        LoadMHB_ConfigF(MappingFilePosition + "Config.txt");
         Create_Plane(300);
         MainCamera_Init(20,-50,0,600,750, (float)-700);
-
-        for (int i = 0; i < 10; i++)
-        {
-            print(MHB_Config_table[i,0].ToString()+","+ MHB_Config_table[i, 1].ToString());
-        }
-       
-
+        LOAD_MHB_ALL();
     }
 	// Update is called once per frame
 	void Update () {
@@ -41,6 +38,15 @@ public class Main : MonoBehaviour {
 
 
     }
+
+    void LOAD_MHB_ALL() //Load MHBs in one Time According to Config File
+    {
+        for(int i=1;i< Config_Number;i++)
+        {
+            LoadMHBs(MappingFilePosition+i.ToString()+".txt", MHB_Config_table[i,0], MHB_Config_table[i, 1]);
+        }
+    }
+
 
     void PUT_MHB_Task()  // used in load MHB one by one
     {
@@ -107,6 +113,7 @@ public class Main : MonoBehaviour {
         
     }
     
+    //Load MHBs in one time according to a Mapping File
     void LoadMHBs(System.String FilePosition,float D,float Long)
     {
         FileStream aFile = new FileStream(FilePosition, FileMode.Open);
@@ -244,7 +251,10 @@ public class Main : MonoBehaviour {
                     {
                         MHB_Config_table[Count_filename, Count_conf - 1] = MHB_Config_table[Count_filename, Count_conf - 1] / (float)(Math.Pow(10, Count_comma));
                     }
-                    FLAG_IN_Config = false; break;//end of this configure
+                    FLAG_IN_Config = false;
+                    Config_Number++;
+                    break;//end of this configure
+
                 case ',':
                     if (FLAG_IS_FLOATING)
                     {
