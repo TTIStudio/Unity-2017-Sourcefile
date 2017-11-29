@@ -15,7 +15,7 @@ public class Main : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        LoadData();
+        LoadData(@"C:\Users\kongq\Desktop\Unity Project\Start 201711\Unity-2017-Sourcefile\putput\"+"all.txt");
         Create_Plane(300);
         MainCamera_Init(20,-50,0,600,750, (float)-700);
 
@@ -29,10 +29,10 @@ public class Main : MonoBehaviour {
         //    PUT_MHB_Task();
         //    frame_count = 0;
         //}
-        
+
     }
 
-    void PUT_MHB_Task()
+    void PUT_MHB_Task()  // used in load MHB one by one
     {
         if (MHB_number_count < MHB_number)
         {
@@ -97,9 +97,9 @@ public class Main : MonoBehaviour {
         
     }
     
-    void LoadData()
+    void LoadData(System.String FilePosition)
     {
-        FileStream aFile = new FileStream(@"C:\Users\kongq\Desktop\Unity Project\Start 201711\New Unity Project 2\\putput\all.txt", FileMode.Open);
+        FileStream aFile = new FileStream(FilePosition, FileMode.Open);
         BinaryReader Reader = new BinaryReader(aFile);
 
         long filelength= aFile.Length;
