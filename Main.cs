@@ -7,7 +7,8 @@ using System.IO;
 // Open File with Windows UI  -- Method 2   -   END
 public class Main : MonoBehaviour {
     int MHB_Position_Sclae_for_LOADFILE = 100;
-    float[,] MHB_Position = new float[1000,3];
+    float[,] MHB_Position = new float[1000,3];      // support MAX 1000 MHB
+    float[,] MHB_Config_table = new float[100, 2];  // Support 100 kinds of MHB - - table : diameter, length
     int MHB_number = 0;
     int MHB_number_count = 0;
 
@@ -15,9 +16,16 @@ public class Main : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        LoadData(@"C:\Users\kongq\Desktop\Unity Project\Start 201711\Unity-2017-Sourcefile\putput\"+"all.txt");
+
+        LoadMHB_ConfigF(@"C:\Users\kongq\Desktop\Unity Project\Start 201711\Unity-2017-Sourcefile\putput\"+"Config.txt");
         Create_Plane(300);
         MainCamera_Init(20,-50,0,600,750, (float)-700);
+
+        for (int i = 0; i < 10; i++)
+        {
+            print(MHB_Config_table[i,0].ToString()+","+ MHB_Config_table[i, 1].ToString());
+        }
+       
 
     }
 	// Update is called once per frame
@@ -29,6 +37,8 @@ public class Main : MonoBehaviour {
         //    PUT_MHB_Task();
         //    frame_count = 0;
         //}
+
+
 
     }
 
@@ -97,7 +107,7 @@ public class Main : MonoBehaviour {
         
     }
     
-    void LoadData(System.String FilePosition)
+    void LoadMHBs(System.String FilePosition,float D,float Long)
     {
         FileStream aFile = new FileStream(FilePosition, FileMode.Open);
         BinaryReader Reader = new BinaryReader(aFile);
@@ -105,6 +115,7 @@ public class Main : MonoBehaviour {
         long filelength= aFile.Length;
         bool MHB_Reading = false;        
         bool MHB_Sign_Nagivate = false;
+        bool MHB_is_floating = false;
 
         int MHB_index = 0;  // 0-X, 1-Y, 2-Z
         int MHB_data_value_counter = 0;
@@ -118,6 +129,7 @@ public class Main : MonoBehaviour {
                 MHB_data_value_counter = 0;
                 MHB_index = 0;
                 MHB_Sign_Nagivate = false;
+                MHB_is_floating = false;
                 MHB_XYZ[0] = 0;
                 MHB_XYZ[1] = 0;
                 MHB_XYZ[2] = 0;
@@ -126,7 +138,12 @@ public class Main : MonoBehaviour {
             }
             else if (a == '}')
             {
-                MHB_XYZ[MHB_index] = MHB_XYZ[MHB_index] / (float)Math.Pow(10, MHB_data_value_counter);
+                if (MHB_is_floating)
+                {
+                    MHB_XYZ[MHB_index] = MHB_XYZ[MHB_index] / (float)Math.Pow(10, MHB_data_value_counter);
+                    MHB_is_floating = false;
+
+                }
                 if (MHB_Sign_Nagivate)
                 {
                     MHB_XYZ[MHB_index] = -MHB_XYZ[MHB_index];
@@ -136,15 +153,19 @@ public class Main : MonoBehaviour {
                 MHB_data_value_counter = 0;
 
 
-                Create_MHB((float)1, (float)20, (float)0, (float)0, (float)0, (float)MHB_XYZ[0], (float)MHB_XYZ[2], (float)MHB_XYZ[1]);
-                MHB_Position[MHB_number,0] = MHB_XYZ[0];
-                MHB_Position[MHB_number,1] = MHB_XYZ[1];
-                MHB_Position[MHB_number,2] = MHB_XYZ[2];
+                Create_MHB((float)D, (float)Long, (float)0, (float)0, (float)0, (float)MHB_XYZ[0], (float)MHB_XYZ[2], (float)MHB_XYZ[1]);
+                //MHB_Position[MHB_number,0] = MHB_XYZ[0];
+                //MHB_Position[MHB_number,1] = MHB_XYZ[1];
+                //MHB_Position[MHB_number,2] = MHB_XYZ[2];
                 MHB_number++;
             }
             else if (a == ',')
             {
-                MHB_XYZ[MHB_index] = MHB_XYZ[MHB_index] / (float)Math.Pow(10, MHB_data_value_counter);
+                if (MHB_is_floating)
+                {
+                    MHB_XYZ[MHB_index] = MHB_XYZ[MHB_index] / (float)Math.Pow(10, MHB_data_value_counter);
+                    MHB_is_floating = false;
+                }
                 if (MHB_Sign_Nagivate)
                 {
                     MHB_XYZ[MHB_index] = -MHB_XYZ[MHB_index];
@@ -163,6 +184,7 @@ public class Main : MonoBehaviour {
             else if (a == '.')
             {
                 MHB_data_value_counter = 0;
+                MHB_is_floating = true;
             }
             else if (a == '0' | a == '1' | a == '2' | a == '3' | a == '4' | a == '5' | a == '6' | a == '7' | a == '8' | a == '9')//deal the number
             {
@@ -179,6 +201,90 @@ public class Main : MonoBehaviour {
         }
 
         Reader.Close();
+    }
+
+
+    void LoadMHB_ConfigF(System.String FilePosition)
+    {
+        FileStream aFile = new FileStream(FilePosition, FileMode.Open);
+        BinaryReader Reader = new BinaryReader(aFile);
+        long filelength = aFile.Length;
+
+        bool FLAG_IN_Comment = true;
+        bool FLAG_IN_Config = false;
+        bool FLAG_IS_NUMBER = false;
+        bool FLAG_IS_FLOATING = false;
+        int Count_comma = 0;
+        int Count_conf = 0;
+        int Count_filename = 0;
+        
+        while ((filelength--) > 0)
+        {
+            char a = Reader.ReadChar();
+
+            FLAG_IS_NUMBER = false;
+            switch (a)
+            {
+                case '/': FLAG_IN_Comment = true; break;
+                case (char)10:
+                case (char)13:
+                    if (FLAG_IN_Comment == true)
+                    {
+                        FLAG_IN_Comment = false;
+                    } break;
+                case '{'://start a new configure  -
+                    FLAG_IN_Config = true;
+                    Count_conf =0;
+                    Count_comma = 0;
+                    FLAG_IS_NUMBER = false;
+                    FLAG_IS_FLOATING = false;
+                    break;
+                case '}':
+                    if (FLAG_IS_FLOATING)
+                    {
+                        MHB_Config_table[Count_filename, Count_conf - 1] = MHB_Config_table[Count_filename, Count_conf - 1] / (float)(Math.Pow(10, Count_comma));
+                    }
+                    FLAG_IN_Config = false; break;//end of this configure
+                case ',':
+                    if (FLAG_IS_FLOATING)
+                    {
+                        MHB_Config_table[Count_filename, Count_conf - 1] = MHB_Config_table[Count_filename, Count_conf - 1] / (float)(Math.Pow(10, Count_comma));
+                    }
+                    Count_conf ++; break;
+                case ':': Count_conf=1; break;
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    Count_comma++;
+                    FLAG_IS_NUMBER = true;
+                    break;
+                case '.': FLAG_IS_FLOATING = true; Count_comma = 0; break;
+                default:break;//Do nothing
+            }
+
+            //if ((FLAG_IN_Comment & FLAG_IN_Config) == true) { print("ERROR: something went wrong!"); }
+            if(FLAG_IN_Config&(!FLAG_IN_Comment)&(FLAG_IS_NUMBER))
+            {
+                switch (Count_conf)
+                {
+                    case 0: Count_filename = a - '0'; break;
+                    case 1: 
+                    case 2:
+                        MHB_Config_table[Count_filename, Count_conf - 1] = MHB_Config_table[Count_filename, Count_conf - 1] * 10 + a - '0';
+                        break;
+                    default:print("ERROR: something went wrong!"); break;
+                }
+
+            }
+
+        }
     }
 }
 

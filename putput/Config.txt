@@ -1,0 +1,12 @@
+//MHB Config File
+//20171129
+//format:
+//{file name:Diameter,Length}
+//file name could be out of order
+//single percision floating number support
+
+{1:10,240}
+{2:9,168}
+{3:8,117.6}
+{4:7,82.32}
+{5:6,57.624}
