@@ -6,8 +6,11 @@ using System.IO;
 
 // Open File with Windows UI  -- Method 2   -   END
 public class Main : MonoBehaviour {
-    int MHB_Sclae_for_LOADFILE = 100;
-    float[,] MHB_Position = new float[1000,3];      // support MAX 1000 MHB
+    static int MHB_Sclae_for_LOADFILE = 100;
+    static int MHB_MAX_NUMBER = 1000;   
+
+
+    float[,] MHB_Position = new float[MHB_MAX_NUMBER, 5];      // support MAX 1000 MHBs  -- X Y Z D L
     float[,] MHB_Config_table = new float[100, 3];  // Support 100 kinds of MHB - - table : diameter, length
     int Config_Number = 0;
     int MHB_number = 0;
@@ -21,23 +24,53 @@ public class Main : MonoBehaviour {
     {
         print("Loading Config File");
         LoadMHB_ConfigF(MappingFilePosition + "Config.txt");
-        Create_Plane(300,-10);
-        MainCamera_Init(20,-50,0,600,750, (float)-700);
-
-        //LOAD_MHB_ALL();
+        Create_Plane(10,-20);
+        //MainCamera_Init(20,-50,0,600,750, (float)-700);
+        MainCamera_Init(9, 0, 0, 0, 6, (float)-25);
+        LOAD_MHB_ALL();
+        Sort_MHB_by_Height();
     }
     // Update is called once per frame
     void Update () {
-
-        //frame_count++;
-        //if (frame_count > 1)
-        //{
-        //    PUT_MHB_Task();
-        //    frame_count = 0;
-        //}
-
+        frame_count++;
+        if (frame_count > 1)
+        {
+            PUT_MHB_Task();
+            frame_count = 0;
+        }
     }
 
+
+    void Sort_MHB_by_Height()
+    {
+        bool FLAG_SORT_READY = true;
+        float[] BUFF= new float[5];
+        do
+        {
+            FLAG_SORT_READY = true;
+            for (int i = 0; i < MHB_number; i++)
+            {
+                if (MHB_Position[i, 1] > MHB_Position[i + 1, 1])
+                {
+                    for (int j = 0; j < 5; j++)
+                    {
+                        BUFF[j] = MHB_Position[i, j];
+                    }
+                    for (int j = 0; j < 5; j++)
+                    {
+                        MHB_Position[i, j] = MHB_Position[i+1, j];
+                    }
+                    for (int j = 0; j < 5; j++)
+                    {
+                        MHB_Position[i+1, j] = BUFF[j];
+                    }
+
+                    FLAG_SORT_READY = false;
+                }
+            }
+        } while (!FLAG_SORT_READY);
+
+    }
     void LOAD_MHB_ALL() //Load MHBs in one Time According to Config File
     {
         print("Loading Config File");
@@ -45,15 +78,25 @@ public class Main : MonoBehaviour {
         {
             LoadMHBs(MappingFilePosition+i.ToString()+".txt", MHB_Config_table[i,0], MHB_Config_table[i, 1], MHB_Sclae_for_LOADFILE);
         }
+
+        print("Find "+ MHB_number.ToString()+ " MHBs");
     }
 
+    void PUT_MHB_Task_with_LowerFirst()  // used in load MHB one by one
+    {
+        if (MHB_number_count < MHB_number)
+        {
+            Create_MHB((float)MHB_Position[MHB_number_count, 3], (float)MHB_Position[MHB_number_count, 4], (float)0, (float)0, (float)0, (float)MHB_Position[MHB_number_count, 0], (float)MHB_Position[MHB_number_count, 2], (float)MHB_Position[MHB_number_count, 1]);
+            MHB_number_count++;
+        }
+    }
 
     void PUT_MHB_Task()  // used in load MHB one by one
     {
         if (MHB_number_count < MHB_number)
         {
-            Create_MHB((float)1, (float)20, (float)0, (float)0, (float)0, (float)MHB_Position[MHB_number_count,0], (float)MHB_Position[MHB_number_count,2], (float)MHB_Position[MHB_number_count,1]);
-
+            print(MHB_Position[MHB_number_count, 3].ToString()+','+ MHB_Position[MHB_number_count, 4].ToString() + ','+ MHB_Position[MHB_number_count, 0].ToString() + ','+ MHB_Position[MHB_number_count, 2].ToString() + ','+ MHB_Position[MHB_number_count, 1].ToString() + '.');
+            Create_MHB((float)MHB_Position[MHB_number_count, 3], (float)MHB_Position[MHB_number_count, 4], (float)0, (float)0, (float)0, (float)MHB_Position[MHB_number_count,0], (float)MHB_Position[MHB_number_count,2], (float)MHB_Position[MHB_number_count,1]);
             MHB_number_count++;
         }
     }
@@ -111,7 +154,6 @@ public class Main : MonoBehaviour {
             print("Hello MHB!");
             // Debug.Log("up.up");      
         }
-        
     }
     
     //Load MHBs in one time according to a Mapping File
@@ -161,11 +203,14 @@ public class Main : MonoBehaviour {
                 MHB_data_value_counter = 0;
 
 
-                Create_MHB((float)D/ Scale, (float)Long/ Scale, (float)0, (float)0, (float)0, (float)MHB_XYZ[0]/ Scale, (float)MHB_XYZ[2]/ Scale, (float)MHB_XYZ[1]/ Scale);
-                //MHB_Position[MHB_number,0] = MHB_XYZ[0];
-                //MHB_Position[MHB_number,1] = MHB_XYZ[1];
-                //MHB_Position[MHB_number,2] = MHB_XYZ[2];
+                //Create_MHB((float)D/ Scale, (float)Long/ Scale, (float)0, (float)0, (float)0, (float)MHB_XYZ[0]/ Scale, (float)MHB_XYZ[2]/ Scale, (float)MHB_XYZ[1]/ Scale);
+                MHB_Position[MHB_number,0] = MHB_XYZ[0] / Scale;//X
+                MHB_Position[MHB_number,1] = MHB_XYZ[2] / Scale;//Y
+                MHB_Position[MHB_number,2] = MHB_XYZ[1] / Scale;//Z
+                MHB_Position[MHB_number, 3] =D / Scale;//D
+                MHB_Position[MHB_number, 4] = Long / Scale;//L
                 MHB_number++;
+                if(MHB_number> MHB_MAX_NUMBER) { print("Amazing! You have import too many MHBs!"); }
             }
             else if (a == ',')
             {
